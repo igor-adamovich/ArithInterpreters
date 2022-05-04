@@ -16,18 +16,18 @@ public class ASTInterpreter extends ASTVisitor {
 	}
 
 	@Override
-	public void visit(Assignment st) {
-		Var var = lookup(st.left);
-		st.right.accept(this);
+	public void visit(Assignment assignment) {
+		Var var = lookup(assignment.left);
+		assignment.right.accept(this);
 		var.value = currentValue;
 	}
 
 	@Override
-	public void visit(Begin st) {
+	public void visit(Begin begin) {
 		int i = 0;
 		double result = 0;
-		Statement stsIter = st.statements;
-		while (i < st.size) {
+		Statement stsIter = begin.statements;
+		while (i < begin.size) {
 			stsIter.accept(this);
 			result = currentValue;
 			stsIter = stsIter.nextStatement;
@@ -37,37 +37,37 @@ public class ASTInterpreter extends ASTVisitor {
 	}
 
 	@Override
-	public void visit(While st) {
+	public void visit(While wh) {
 		double result = currentValue;
-		st.expression.accept(this);
+		wh.expression.accept(this);
 		while(currentConditionValue) {
-			st.begin.accept(this);
+			wh.begin.accept(this);
 			result = currentValue;
-			st.expression.accept(this);	
+			wh.expression.accept(this);	
 		}
 		currentValue = result;
 	}
 
 	@Override
-	public void visit(Abs expr) {
-		expr.expr.accept(this);
+	public void visit(Abs abs) {
+		abs.expr.accept(this);
 		currentValue = Math.abs(currentValue);
 	}
 
 	@Override
-	public void visit(Numeric expr) {
-		currentValue = expr.value;
+	public void visit(Numeric value) {
+		currentValue = value.value;
 	}
 
 	@Override
-	public void visit(Variable expr) {
-		currentValue = lookup(expr.name).value;
+	public void visit(Variable variable) {
+		currentValue = lookup(variable.name).value;
 	}
 
 
 	@Override
-	public void visit(BooleanValue expr) {
-		currentConditionValue = expr.value;
+	public void visit(BooleanValue boolValue) {
+		currentConditionValue = boolValue.value;
 	}
 
 	private final Var lookup(char name) {
@@ -79,82 +79,82 @@ public class ASTInterpreter extends ASTVisitor {
 	}
 
 	@Override
-	public void visit(Div expr) {
-		expr.left.accept(this);
+	public void visit(Div div) {
+		div.left.accept(this);
 		double left = currentValue;
-		expr.right.accept(this);
+		div.right.accept(this);
 		double right = currentValue;
 		currentValue = left / right;
 	}
 
 	@Override
-	public void visit(Minus expr) {
-		expr.left.accept(this);
+	public void visit(Minus minus) {
+		minus.left.accept(this);
 		double left = currentValue;
-		expr.right.accept(this);
+		minus.right.accept(this);
 		double right = currentValue;
 		currentValue = left - right;
 	}
 
 	@Override
-	public void visit(Mult expr) {
-		expr.left.accept(this);
+	public void visit(Mult mult) {
+		mult.left.accept(this);
 		double left = currentValue;
-		expr.right.accept(this);
+		mult.right.accept(this);
 		double right = currentValue;
 		currentValue = left * right;
 	}
 
 	@Override
-	public void visit(Sum expr) {
-		expr.left.accept(this);
+	public void visit(Sum sum) {
+		sum.left.accept(this);
 		double left = currentValue;
-		expr.right.accept(this);
+		sum.right.accept(this);
 		double right = currentValue;
 		currentValue = left + right;
 	}
 
 	@Override
-	public void visit(Equals expr) {
-		expr.left.accept(this);
+	public void visit(Equals equals) {
+		equals.left.accept(this);
 		double left = currentValue;
-		expr.right.accept(this);
+		equals.right.accept(this);
 		double right = currentValue;
 		currentConditionValue = left == right;
 	}
 
 	@Override
-	public void visit(Greater expr) {
-		expr.left.accept(this);
+	public void visit(Greater greater) {
+		greater.left.accept(this);
 		double left = currentValue;
-		expr.right.accept(this);
+		greater.right.accept(this);
 		double right = currentValue;
 		currentConditionValue = left > right;
 	}
 
 	@Override
-	public void visit(GreaterEquals expr) {
-		expr.left.accept(this);
+	public void visit(GreaterEquals greaterEquals) {
+		greaterEquals.left.accept(this);
 		double left = currentValue;
-		expr.right.accept(this);
+		greaterEquals.right.accept(this);
 		double right = currentValue;
 		currentConditionValue = left >= right;
 	}
 
 	@Override
-	public void visit(Less expr) {
-		expr.left.accept(this);
+	public void visit(Less less) {
+		less.left.accept(this);
 		double left = currentValue;
-		expr.right.accept(this);
+		less.right.accept(this);
 		double right = currentValue;
 		currentConditionValue = left < right;
 	}
 
 	@Override
-	public void visit(LessEquals expr) {
-		expr.left.accept(this);
+	public void visit(LessEquals lessEquals) {
+		lessEquals.left.accept(this);
 		double left = currentValue;
-		expr.right.accept(this);
+		lessEquals.right.accept(this);
 		double right = currentValue;
 		currentConditionValue = left <= right;
 	}

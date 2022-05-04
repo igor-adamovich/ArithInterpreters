@@ -6,7 +6,7 @@ import examples.visitor.nodes.booleanexpression.*;
 import examples.visitor.nodes.statements.*;
 import examples.visitor.visitor.ASTVisitor;
 
-public class VisitorArithExample {
+public class ArithExample {
 
 	@Specialize
 	public static final double sqrt(double a, double dEps) {	

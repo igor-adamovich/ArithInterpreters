@@ -42,10 +42,6 @@ import org.openjdk.jmh.annotations.*;
 import java.util.concurrent.TimeUnit;
 
 import org.openjdk.jmh.annotations.Benchmark;
-import examples.descend.DescendArithExample;
-import examples.descend.spec.DescendArithExampleSpec;
-import examples.visitor.VisitorArithExample;
-import examples.visitor.spec.VisitorArithExampleSpec;
 
 @Warmup(iterations = 3, time = 5, timeUnit = TimeUnit.SECONDS)
 @Measurement(iterations = 5, time = 10, timeUnit = TimeUnit.SECONDS)
@@ -60,21 +56,21 @@ public class InterpreterBenchmark{
 	
     @Benchmark
     public double benchDesc() {
-    	return DescendArithExample.sqrt(a, eps);
+    	return examples.descend.ArithExample.sqrt(a, eps);
     }
     
     @Benchmark
     public double benchDescSpec() {
-    	return DescendArithExampleSpec.sqrt(a, eps);
+    	return examples.descend.spec.ArithExample.sqrt(a, eps);
     }
 
     @Benchmark
     public double benchVisitor() {
-    	return VisitorArithExample.sqrt(a, eps);
+    	return examples.visitor.ArithExample.sqrt(a, eps);
     }
 
 @Benchmark
     public double benchVisitorSpec() {
-    	return VisitorArithExampleSpec.sqrt(a, eps);
+    	return examples.visitor.spec.ArithExample.sqrt(a, eps);
     }
 }

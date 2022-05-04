@@ -1,13 +1,7 @@
 package examples.descend;
 
-import examples.descend.arithexpressions.Abs;
-import examples.descend.arithexpressions.ArithExpression;
-import examples.descend.arithexpressions.ArithOperator;
-import examples.descend.arithexpressions.Numeric;
-import examples.descend.arithexpressions.Variable;
-import examples.descend.booleanexpression.BooleanExpression;
-import examples.descend.booleanexpression.BooleanOperator;
-import examples.descend.booleanexpression.BooleanValue;
+import examples.descend.arithexpressions.*;
+import examples.descend.booleanexpression.*;
 import examples.descend.statements.Assignment;
 import examples.descend.statements.Begin;
 import examples.descend.statements.Statement;
@@ -42,39 +36,37 @@ public class ASTInterpreter {
 		double result = 0;
 		Statement stsIter = begin.statements;
 		while (i < begin.size) {
-			result = executeStatement(stsIter, vars);
+			result = processStatement(stsIter, vars);
 			stsIter = stsIter.nextStatement;
 			i++;
 		}	
 		return result;
 	}
 	
-	public static final double executeStatement(Statement st, 
+	public static final double processStatement(Statement st, 
 							   Var vars) {		
 		double result = 0;
 		if (st.type == ASSIGNMENT) {
-			return processAssignment(st, vars);
+			return processAssignment((Assignment)st, vars);
 		} else if (st.type == WHILE){
-			return processWhile(st, vars);
+			return processWhile((While)st, vars);
 		}
 		return result;
 	}
 
-	private static double processAssignment(Statement st, Var vars) {
-		Assignment assignment = (Assignment) st;
+	private static double processAssignment(Assignment assignment, Var vars) {
 		Var varIter = lookup(vars, assignment.left);
-		varIter.value = executeArithExpression(assignment.right, 
+		varIter.value = processArithExpression(assignment.right, 
 												 vars);
 		return varIter.value;
 	}
 	
-	private static double processWhile(Statement st, Var vars) {
-		While wh = (While) st;
+	private static double processWhile(While wh, Var vars) {
 		double result = 0;
-		boolean iterExpression = executeBoolExpression(wh.expression, vars);
+		boolean iterExpression = processBoolExpression(wh.expression, vars);
 		while(iterExpression) {
 			result = execute(wh.begin, vars);
-			iterExpression = executeBoolExpression(wh.expression, vars);
+			iterExpression = processBoolExpression(wh.expression, vars);
 		}
 		return result;
 	}
@@ -88,21 +80,21 @@ public class ASTInterpreter {
 	}
 	
 	public static final boolean 
-	executeBoolExpression(BooleanExpression expression,
+	processBoolExpression(BooleanExpression expression,
 			              Var vars) {
 		if (expression.type == BOOLEANVALUE) {
 			BooleanValue value = (BooleanValue) expression;
 			return value.value;
 		} else if (expression.type == OPERATOR) {
 			BooleanOperator operator = (BooleanOperator) expression;
-			boolean result = executeBoolOperator(operator, vars);
+			boolean result = processBoolOperator(operator, vars);
 			return result;
 		}
 		return false;
 	}
 	
 	public static final boolean 
-	executeBoolOperator(BooleanOperator operator,
+	processBoolOperator(BooleanOperator operator,
                         Var vars) {
 		if (operator.opType == EQUALS) {
 			return equals(operator, vars);
@@ -119,76 +111,71 @@ public class ASTInterpreter {
 	}
 
 	private static boolean equals(BooleanOperator operator, Var vars) {
-		double left = executeArithExpression(operator.left, vars);
-		double right = executeArithExpression(operator.right, vars);
+		double left = processArithExpression(operator.left, vars);
+		double right = processArithExpression(operator.right, vars);
 		return left == right;
 	}
 
 	private static boolean less(BooleanOperator operator, Var vars) {
-		double left = executeArithExpression(operator.left, vars);
-		double right = executeArithExpression(operator.right, vars);
+		double left = processArithExpression(operator.left, vars);
+		double right = processArithExpression(operator.right, vars);
 		return left < right;
 	}
 
 	private static boolean greater(BooleanOperator operator, Var vars) {
-		double left = executeArithExpression(operator.left, vars);
-		double right = executeArithExpression(operator.right, vars);
+		double left = processArithExpression(operator.left, vars);
+		double right = processArithExpression(operator.right, vars);
 		return left > right;
 	}
 
 	private static boolean lessEquals(BooleanOperator operator, Var vars) {
-		double left = executeArithExpression(operator.left, vars);
-		double right = executeArithExpression(operator.right, vars);
+		double left = processArithExpression(operator.left, vars);
+		double right = processArithExpression(operator.right, vars);
 		return left <= right;
 	}
 
 	private static boolean greaterEquals(BooleanOperator operator, Var vars) {
-		double left = executeArithExpression(operator.left, vars);
-		double right = executeArithExpression(operator.right, vars);
+		double left = processArithExpression(operator.left, vars);
+		double right = processArithExpression(operator.right, vars);
 		return left >= right;
 	}
 	
 	public static final double 
-	executeArithExpression(ArithExpression expression,
+	processArithExpression(ArithExpression expression,
 			               Var vars) {
 		if (expression.type == VALUE) {
-			return value(expression);
+			return value((Numeric)expression);
 		} else if (expression.type == OPERATOR) {
-			return operator(expression, vars);
+			return operator((ArithOperator)expression, vars);
 		} else if (expression.type == VARIABLE) {
-			return variable(expression, vars);
+			return variable((Variable)expression, vars);
 		}  else if (expression.type == ABS) {
-			return abs(expression, vars);
+			return abs((Abs)expression, vars);
 		}
 		return 0;		
 	}
 
-	private static double value(ArithExpression expression) {
-		Numeric value = (Numeric) expression;
+	private static double value(Numeric value) {
 		return value.value;
 	}
 
-	private static double operator(ArithExpression expression, Var vars) {
-		ArithOperator operator = (ArithOperator) expression;
-		double result = executeArithOperator(operator, vars);
+	private static double operator(ArithOperator operator, Var vars) {
+		double result = processArithOperator(operator, vars);
 		return result;
 	}
 
-	private static double variable(ArithExpression expression, Var vars) {
-		Variable variable = (Variable) expression;
+	private static double variable(Variable variable, Var vars) {
 		Var var = lookup(vars, variable.name);
 		return var.value;
 	}
 
-	private static double abs(ArithExpression expression, Var vars) {
-		Abs abs = (Abs) expression;
-		double result;
-		result = executeArithExpression(abs.expr, vars);
+	private static double abs(Abs abs, Var vars) {
+		double result = processArithExpression(abs.expr, vars);
 		return Math.abs(result);
 	}
 	
 	public static final double 
-	executeArithOperator(ArithOperator operator,
+	processArithOperator(ArithOperator operator,
                         Var vars) {
 		if (operator.opType == SUM) {
 			return sum(operator, vars);
@@ -203,26 +190,26 @@ public class ASTInterpreter {
 	}
 	
 	private static double sum(ArithOperator operator, Var vars) {
-		double left = executeArithExpression(operator.left, vars);
-		double right = executeArithExpression(operator.right, vars);
+		double left = processArithExpression(operator.left, vars);
+		double right = processArithExpression(operator.right, vars);
 		return left + right;
 	}
 	
 	private static double sub(ArithOperator operator, Var vars) {
-		double left = executeArithExpression(operator.left, vars);
-		double right = executeArithExpression(operator.right, vars);
+		double left = processArithExpression(operator.left, vars);
+		double right = processArithExpression(operator.right, vars);
 		return left - right;
 	}
 	
 	private static double mult(ArithOperator operator, Var vars) {
-		double left = executeArithExpression(operator.left, vars);
-		double right = executeArithExpression(operator.right, vars);
+		double left = processArithExpression(operator.left, vars);
+		double right = processArithExpression(operator.right, vars);
 		return left * right;
 	}
 	
 	private static double div(ArithOperator operator, Var vars) {
-		double left = executeArithExpression(operator.left, vars);
-		double right = executeArithExpression(operator.right, vars);
+		double left = processArithExpression(operator.left, vars);
+		double right = processArithExpression(operator.right, vars);
 		return left / right;
 	}
 }

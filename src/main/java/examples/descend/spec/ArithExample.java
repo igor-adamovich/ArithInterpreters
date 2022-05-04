@@ -8,7 +8,7 @@ import examples.descend.booleanexpression.BooleanOperator;
 import examples.descend.statements.*;
 import examples.descend.*;
 
-public class DescendArithExampleSpec {
+public class ArithExample {
 	@Specialize
 	public static final double sqrt(double a, double dEps) {
 		double obj_value;

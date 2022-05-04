@@ -8,7 +8,7 @@ import examples.visitor.nodes.statements.*;
 import examples.visitor.visitor.ASTVisitor;
 import examples.visitor.*;
 
-public class VisitorArithExampleSpec {
+public class ArithExample {
 	@Specialize
 	public static final double sqrt(double a, double dEps) {
 		double obj_value;
