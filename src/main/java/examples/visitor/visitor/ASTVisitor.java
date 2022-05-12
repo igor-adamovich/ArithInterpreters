@@ -5,22 +5,22 @@ import examples.visitor.nodes.booleanexpression.*;
 import examples.visitor.nodes.statements.*;
 
 public abstract class ASTVisitor {
-	public abstract void visit(Assignment st);
-	public abstract void visit(Begin st);
-	public abstract void visit(While st);
+	public abstract void visit(Assignment assignment);
+	public abstract void visit(Begin begin);
+	public abstract void visit(While wh);
 	
-	public abstract void visit(Abs expr);
-	public abstract void visit(Numeric expr);
-	public abstract void visit(Variable expr);
-	public abstract void visit(Div expr);
-	public abstract void visit(Minus expr);
-	public abstract void visit(Mult expr);
-	public abstract void visit(Sum expr);
+	public abstract void visit(Abs abs);
+	public abstract void visit(Numeric value);
+	public abstract void visit(Variable variable);
+	public abstract void visit(Div div);
+	public abstract void visit(Minus minus);
+	public abstract void visit(Mult mult);
+	public abstract void visit(Sum sum);
 	
-	public abstract void visit(BooleanValue expr);
-	public abstract void visit(Equals expr);
-	public abstract void visit(Greater expr);
-	public abstract void visit(GreaterEquals expr);
-	public abstract void visit(Less expr);
-	public abstract void visit(LessEquals expr);
+	public abstract void visit(BooleanValue boolValue);
+	public abstract void visit(Equals equals);
+	public abstract void visit(Greater greater);
+	public abstract void visit(GreaterEquals greaterEquals);
+	public abstract void visit(Less less);
+	public abstract void visit(LessEquals lessEquals);
 }
