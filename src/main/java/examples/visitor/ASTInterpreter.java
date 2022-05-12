@@ -17,7 +17,7 @@ public class ASTInterpreter extends ASTVisitor {
 
 	@Override
 	public void visit(Assignment assignment) {
-		Var var = lookup(assignment.left);
+		Var var = lookup(vars, assignment.left);
 		assignment.right.accept(this);
 		var.value = currentValue;
 	}
@@ -61,7 +61,7 @@ public class ASTInterpreter extends ASTVisitor {
 
 	@Override
 	public void visit(Variable variable) {
-		currentValue = lookup(variable.name).value;
+		currentValue = lookup(vars, variable.name).value;
 	}
 
 
@@ -70,7 +70,7 @@ public class ASTInterpreter extends ASTVisitor {
 		currentConditionValue = boolValue.value;
 	}
 
-	private final Var lookup(char name) {
+	private static final Var lookup(Var vars, char name) {
 		Var varIter = vars;
 		while(varIter.name != name) {
 			varIter = varIter.nextVar;
