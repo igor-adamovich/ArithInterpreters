@@ -33,8 +33,8 @@ public class ArithExample {
 		
 		Begin begin = new Begin(3, wholeStatementsList);		
 
-		ASTInterpreter exampleInterpreter = new ASTInterpreter(vars);		
-		begin.accept(exampleInterpreter);
-		return exampleInterpreter.currentValue;
+		ASTInterpreter visitor = new ASTInterpreter(vars);		
+		begin.accept(visitor);
+		return visitor.currentValue;
 	}
 }
