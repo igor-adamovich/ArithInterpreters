@@ -6,13 +6,16 @@ import examples.visitor.visitor.ASTVisitor;
 public class Begin extends ASTNode {
 	public int size;
 	public Statement statements;
-	
-	public void accept0(ASTVisitor visitor) {
-		visitor.visit(this);
-	}
 
 	public Begin(int size, Statement statements) {
 		this.size = size;
 		this.statements = statements;
+	}
+	
+	public void accept(ASTVisitor visitor) {
+		if (visitor == null) {
+			throw new IllegalArgumentException();
+		}
+		visitor.visit(this);
 	}
 }

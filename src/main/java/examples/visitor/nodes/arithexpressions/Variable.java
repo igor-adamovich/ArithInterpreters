@@ -4,12 +4,15 @@ import examples.visitor.visitor.ASTVisitor;
 
 public class Variable extends ArithExpression{
 	public char name;
-	
-	public void accept0(ASTVisitor visitor) {
-		visitor.visit(this);
-	}
 
 	public Variable(char name) {
 		this.name = name;
-	}	
+	}
+	
+	public void accept(ASTVisitor visitor) {
+		if (visitor == null) {
+			throw new IllegalArgumentException();
+		}
+		visitor.visit(this);
+	}
 }

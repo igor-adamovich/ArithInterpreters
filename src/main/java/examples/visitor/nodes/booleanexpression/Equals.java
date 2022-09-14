@@ -9,7 +9,10 @@ public class Equals extends BooleanOperator {
 		super(left, right);
 	}
 
-	public void accept0(ASTVisitor visitor) {
+	public void accept(ASTVisitor visitor) {
+		if (visitor == null) {
+			throw new IllegalArgumentException();
+		}
 		visitor.visit(this);
 	}
 }

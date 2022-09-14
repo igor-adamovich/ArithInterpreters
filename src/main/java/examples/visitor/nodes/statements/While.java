@@ -7,13 +7,16 @@ public class While extends Statement{
 	public BooleanExpression expression;
 	public Begin begin;
 	
-	public void accept0(ASTVisitor visitor) {
-		visitor.visit(this);
-	}
-
 	public While(BooleanExpression expression, Begin begin, Statement nextStatement) {
 		this.expression = expression;
 		this.begin = begin;
 		this.nextStatement = nextStatement;
+	}
+	
+	public void accept(ASTVisitor visitor) {
+		if (visitor == null) {
+			throw new IllegalArgumentException();
+		}
+		visitor.visit(this);
 	}
 }

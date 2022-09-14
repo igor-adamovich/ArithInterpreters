@@ -5,11 +5,14 @@ import examples.visitor.visitor.ASTVisitor;
 public class Abs extends ArithExpression {
 	public ArithExpression expr;
 	
-	public void accept0(ASTVisitor visitor) {
-		visitor.visit(this);
-	}
-
 	public Abs(ArithExpression expr) {
 		this.expr = expr;
+	}
+	
+	public void accept(ASTVisitor visitor) {
+		if (visitor == null) {
+			throw new IllegalArgumentException();
+		}
+		visitor.visit(this);
 	}
 }
